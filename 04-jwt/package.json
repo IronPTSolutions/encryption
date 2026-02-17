@@ -1,0 +1,9 @@
+{
+  "name": "04-jwt",
+  "version": "1.0.0",
+  "description": "Ejemplos de JSON Web Tokens (JWT) en Node.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/jwt-create.js && node src/jwt-verify.js && node src/jwt-refresh.js"
+  }
+}
