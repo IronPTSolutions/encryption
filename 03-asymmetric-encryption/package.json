@@ -1,0 +1,9 @@
+{
+  "name": "03-asymmetric-encryption",
+  "version": "1.0.0",
+  "description": "Ejemplos de cifrado asimétrico (RSA) en Node.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/keypair-generation.js && node src/encrypt-decrypt.js && node src/digital-signature.js"
+  }
+}

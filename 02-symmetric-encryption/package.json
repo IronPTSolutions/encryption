@@ -1,0 +1,9 @@
+{
+  "name": "02-symmetric-encryption",
+  "version": "1.0.0",
+  "description": "Ejemplos de cifrado simétrico (AES) en Node.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/key-generation.js && node src/aes-encrypt.js && node src/aes-gcm.js"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "01-hashing",
+  "version": "1.0.0",
+  "description": "Ejemplos de funciones hash y HMAC en Node.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/basic-hash.js && node src/hmac.js && node src/verify-integrity.js"
+  }
+}
