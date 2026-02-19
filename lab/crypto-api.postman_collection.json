@@ -1,0 +1,645 @@
+{
+  "info": {
+    "name": "Crypto API Lab",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "publicKey",
+      "value": ""
+    },
+    {
+      "key": "privateKey",
+      "value": ""
+    },
+    {
+      "key": "encrypted_symmetric",
+      "value": ""
+    },
+    {
+      "key": "iv",
+      "value": ""
+    },
+    {
+      "key": "salt",
+      "value": ""
+    },
+    {
+      "key": "authTag",
+      "value": ""
+    },
+    {
+      "key": "encrypted_asymmetric",
+      "value": ""
+    },
+    {
+      "key": "signature",
+      "value": ""
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Hashing",
+      "item": [
+        {
+          "name": "Hash SHA-256",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hello world\",\n  \"algorithm\": \"sha256\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/hash",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "hash"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hash MD5",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hello world\",\n  \"algorithm\": \"md5\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/hash",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "hash"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hash sin algorithm (default sha256)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hello world\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/hash",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "hash"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hash sin text (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"algorithm\": \"sha256\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/hash",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "hash"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "HMAC",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hello world\",\n  \"secret\": \"mi-clave-secreta\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/hmac",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "hmac"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "HMAC sin secret (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hello world\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/hmac",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "hmac"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Cifrado Simétrico",
+      "item": [
+        {
+          "name": "Encrypt",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"mensaje secreto\",\n  \"password\": \"mi-password-seguro\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/symmetric/encrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "symmetric", "encrypt"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('encrypted_symmetric', res.encrypted);",
+                  "pm.collectionVariables.set('iv', res.iv);",
+                  "pm.collectionVariables.set('salt', res.salt);",
+                  "pm.collectionVariables.set('authTag', res.authTag);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Decrypt",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"encrypted\": \"{{encrypted_symmetric}}\",\n  \"iv\": \"{{iv}}\",\n  \"salt\": \"{{salt}}\",\n  \"authTag\": \"{{authTag}}\",\n  \"password\": \"mi-password-seguro\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/symmetric/decrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "symmetric", "decrypt"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Decrypt con password incorrecto (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"encrypted\": \"{{encrypted_symmetric}}\",\n  \"iv\": \"{{iv}}\",\n  \"salt\": \"{{salt}}\",\n  \"authTag\": \"{{authTag}}\",\n  \"password\": \"password-incorrecto\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/symmetric/decrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "symmetric", "decrypt"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Encrypt sin campos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hola\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/symmetric/encrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "symmetric", "encrypt"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Cifrado Asimétrico",
+      "item": [
+        {
+          "name": "Generar KeyPair",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/asymmetric/keypair",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "asymmetric", "keypair"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('publicKey', res.publicKey);",
+                  "pm.collectionVariables.set('privateKey', res.privateKey);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Encrypt con clave pública",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"mensaje RSA secreto\",\n  \"publicKey\": \"{{publicKey}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/asymmetric/encrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "asymmetric", "encrypt"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('encrypted_asymmetric', res.encrypted);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Decrypt con clave privada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"encrypted\": \"{{encrypted_asymmetric}}\",\n  \"privateKey\": \"{{privateKey}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/asymmetric/decrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "asymmetric", "decrypt"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Encrypt sin publicKey (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hola\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/asymmetric/encrypt",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "asymmetric", "encrypt"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Firma Digital",
+      "item": [
+        {
+          "name": "Firmar datos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"documento importante que necesita firma\",\n  \"privateKey\": \"{{privateKey}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/sign",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "sign"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('signature', res.signature);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Verificar firma válida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"documento importante que necesita firma\",\n  \"signature\": \"{{signature}}\",\n  \"publicKey\": \"{{publicKey}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "verify"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar firma con datos alterados",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"documento ALTERADO\",\n  \"signature\": \"{{signature}}\",\n  \"publicKey\": \"{{publicKey}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "verify"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Firmar sin campos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"algo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/sign",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "sign"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. JWT",
+      "item": [
+        {
+          "name": "Crear JWT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payload\": {\n    \"sub\": \"user123\",\n    \"name\": \"Ana García\",\n    \"role\": \"admin\"\n  },\n  \"secret\": \"mi-secreto-jwt\",\n  \"expiresInSeconds\": 3600\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/jwt/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "jwt", "create"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.collectionVariables.set('jwt_token', res.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Crear JWT sin expiración",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payload\": {\n    \"sub\": \"user456\",\n    \"name\": \"Carlos\"\n  },\n  \"secret\": \"otro-secreto\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/jwt/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "jwt", "create"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar JWT válido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{jwt_token}}\",\n  \"secret\": \"mi-secreto-jwt\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/jwt/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "jwt", "verify"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar JWT con secret incorrecto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{jwt_token}}\",\n  \"secret\": \"secreto-incorrecto\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/jwt/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "jwt", "verify"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear JWT sin campos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"secret\": \"algo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crypto/jwt/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["crypto", "jwt", "create"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
