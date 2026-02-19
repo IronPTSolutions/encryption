@@ -21,11 +21,38 @@ lab/
 │   └── routes.config.js            # Rutas de la API (ya configurado)
 ├── controllers/
 │   └── crypto.controllers.js       # 👈 AQUÍ IMPLEMENTAS TUS FUNCIONES
-└── middlewares/
-    └── errors.middleware.js         # Manejador de errores (ya configurado)
+├── middlewares/
+│   └── errors.middleware.js         # Manejador de errores (ya configurado)
+└── tests/
+    ├── 01-hashing.test.js           # Tests iteración 1
+    ├── 02-symmetric.test.js         # Tests iteración 2
+    ├── 03-asymmetric.test.js        # Tests iteración 3
+    ├── 04-signature.test.js         # Tests iteración 4
+    └── 05-jwt.test.js               # Tests iteración 5
 ```
 
-> **Solo necesitas editar `controllers/crypto.controllers.js`**. Las rutas, el servidor y el error handler ya están listos.
+> **Solo necesitas editar `controllers/crypto.controllers.js`**. Las rutas, el servidor, el error handler y los tests ya están listos.
+
+## Tests
+
+Usa los tests para verificar que tu implementación es correcta. Puedes ejecutar los tests de cada iteración por separado o todos a la vez:
+
+```bash
+# Ejecutar TODOS los tests
+npm test
+
+# Ejecutar tests en modo watch (se re-ejecutan al guardar)
+npm run test:watch
+
+# Ejecutar solo los tests de una iteración
+npm run test:1       # Iteración 1: Hashing
+npm run test:2       # Iteración 2: Cifrado simétrico
+npm run test:3       # Iteración 3: Cifrado asimétrico
+npm run test:4       # Iteración 4: Firma digital
+npm run test:5       # Iteración 5: JWT
+```
+
+Flujo de trabajo recomendado: abre dos terminales, una con `npm start` y otra con `npm run test:watch`. Implementa las funciones y los tests se ejecutarán automáticamente.
 
 ---
 

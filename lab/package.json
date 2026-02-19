@@ -4,11 +4,22 @@
   "description": "Lab: API REST de criptografía con Express.js y patrón MVC",
   "type": "module",
   "scripts": {
-    "start": "node --watch app.js"
+    "start": "node --watch app.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:1": "vitest run tests/01-hashing.test.js",
+    "test:2": "vitest run tests/02-symmetric.test.js",
+    "test:3": "vitest run tests/03-asymmetric.test.js",
+    "test:4": "vitest run tests/04-signature.test.js",
+    "test:5": "vitest run tests/05-jwt.test.js"
   },
   "dependencies": {
     "express": "^5.2.1",
     "http-errors": "^2.0.1",
     "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.0.18"
   }
 }
